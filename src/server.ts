@@ -17,21 +17,28 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Middlewares
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "https://squadcraft-client.vercel.app",
-      "https://squadraft-client.vercel.app",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
-// Preflight requests handler
-app.options("*", cors());
+app.use((req, res, next) => {
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'https://squadcraft-client.vercel.app',
+    'https://squadraft-client.vercel.app'
+  ];
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
+  
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  next();
+});
 app.use(express.json());
 
 // Public Auth Routes
