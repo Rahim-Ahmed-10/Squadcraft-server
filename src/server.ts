@@ -19,7 +19,7 @@ connectDB();
 // Middlewares
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "*",
+    origin: ["http://localhost:3000", "https://squadcraft-client.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
   })
@@ -38,6 +38,11 @@ app.use("/api/notices", noticeRoutes);
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "healthy", timestamp: new Date() });
+});
+
+// Root endpoint
+app.get("/", (req, res) => {
+  res.send("SquadCraft Backend Server is Running Successfully!");
 });
 
 // Start listening
