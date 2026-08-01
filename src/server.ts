@@ -19,11 +19,19 @@ connectDB();
 // Middlewares
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://squadcraft-client.vercel.app"],
+    origin: [
+      "http://localhost:3000",
+      "https://squadcraft-client.vercel.app",
+      "https://squadraft-client.vercel.app",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// Preflight requests handler
+app.options("*", cors());
 app.use(express.json());
 
 // Public Auth Routes
